@@ -91,8 +91,8 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 		try {	
 		QFHttpClient httpClient = new QFHttpClient(arg0, false);
 		
-		/*¶ÔÓÚÐèÒªcookieµÄÍøÕ¾£¬Çë×Ô¼º´¦Àícookie£¨±ØÐë£©
-		* ÀýÈç£º
+		/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªcookieï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½cookieï¿½ï¿½ï¿½ï¿½ï¿½ë£©
+		* ï¿½ï¿½ï¿½ç£º
 		* httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 		*/
 
@@ -101,10 +101,10 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 			
 			get = new QFGetMethod(getUrl);
 			
-			//1¡¢¶ÔÓÚÍ¨¹ý¶à´Îget|postÇëÇó²ÅÄÜµÃµ½°üº¬»úÆ±ÐÅÏ¢µÄÍøÕ¾£¬ÐèÒª×¢Òâ¶ÔstatusµÄÅÐ¶Ï
-			//2¡¢¶ÔÓÚÍ¨¹ý¶à´Îget|postÇëÇó²ÅÄÜµÃµ½°üº¬»úÆ±ÐÅÏ¢µÄÍøÕ¾£¬Èç¹ûÐèÒªcookie£¬ÔòÔÚÃ¿Ò»´Îget|postÇëÇóÇ°¶¼´¦ÀíºÃcookie
-			//3¡¢Èç¹ûÍøÕ¾ÐèÒªÊ¹ÓÃcookie£¬GetMethod Óöµ½ 302 Ê±Ä¬ÈÏ»á×Ô¶¯Ìø×ª£¬²»Áô»ú»á¸ø ¿ª·¢´¦ÀíCookie£¬Õâ¸öÊ±ºòÒªÌØ±ðÐ¡ÐÄ£¬ ÐèÒªÊ¹ÓÃ get.setFollowRedirects(false); ×èÖ¹×Ô¶¯Ìø×ª£¬È»ºó×Ô¼º´¦Àí302 ÒÔ¼°Cookie¡£
-			/* ÀýÈç£º
+			//1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½get|postï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÜµÃµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ±ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½Òª×¢ï¿½ï¿½ï¿½statusï¿½ï¿½ï¿½Ð¶ï¿½
+			//2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½get|postï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÜµÃµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ±ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªcookieï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½get|postï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cookie
+			//3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ÒªÊ¹ï¿½ï¿½cookieï¿½ï¿½GetMethod ï¿½ï¿½ï¿½ï¿½ 302 Ê±Ä¬ï¿½Ï»ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Cookieï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Òªï¿½Ø±ï¿½Ð¡ï¿½Ä£ï¿½ ï¿½ï¿½ÒªÊ¹ï¿½ï¿½ get.setFollowRedirects(false); ï¿½ï¿½Ö¹ï¿½Ô¶ï¿½ï¿½ï¿½×ªï¿½ï¿½È»ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½302 ï¿½Ô¼ï¿½Cookieï¿½ï¿½
+			/* ï¿½ï¿½ï¿½ç£º
 			try {
 				get.setFollowRedirects(false);
 				get.getParams().setContentCharset("utf-8");
@@ -154,9 +154,9 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 	public ProcessResultInfo process(String arg0, FlightSearchParam arg1) {
 		String html = arg0;
 		
-		/* ProcessResultInfoÖÐ£¬
-		 * retÎªtrueÊ±£¬status¿ÉÒÔÎª£ºSUCCESS(×¥È¡µ½»úÆ±¼Û¸ñ)|NO_RESULT(ÎÞ½á¹û£¬Ã»ÓÐ¿ÉÂôµÄ»úÆ±)
-		 * retÎªfalseÊ±£¬status¿ÉÒÔÎª:CONNECTION_FAIL|INVALID_DATE|INVALID_AIRLINE|PARSING_FAIL|PARAM_ERROR
+		/* ProcessResultInfoï¿½Ð£ï¿½
+		 * retÎªtrueÊ±ï¿½ï¿½statusï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½SUCCESS(×¥È¡ï¿½ï¿½ï¿½ï¿½Æ±ï¿½Û¸ï¿½)|NO_RESULT(ï¿½Þ½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½Ä»ï¿½Æ±)
+		 * retÎªfalseÊ±ï¿½ï¿½statusï¿½ï¿½ï¿½ï¿½Îª:CONNECTION_FAIL|INVALID_DATE|INVALID_AIRLINE|PARSING_FAIL|PARAM_ERROR
 		 */
 		ProcessResultInfo result = new ProcessResultInfo();
 		if ("Exception".equals(html)) {	
@@ -164,7 +164,7 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 			result.setStatus(Constants.CONNECTION_FAIL);
 			return result;			
 		}		
-		//ÐèÒªÓÐÃ÷ÏÔµÄÌáÊ¾Óï¾ä£¬²ÅÄÜÅÐ¶ÏÊÇ·ñINVALID_DATE|INVALID_AIRLINE|NO_RESULT
+		//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ç·ï¿½INVALID_DATE|INVALID_AIRLINE|NO_RESULT
 		if (html.contains("Today Flight is full, select an other day or check later for any seat released. ")) {
 			result.setRet(false);
 			result.setStatus(Constants.INVALID_DATE);
@@ -211,7 +211,7 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 							flightNoList.clear();
 							
 							seg.setFlightno(marketDatesJson.getString("flightNumber"));
-							seg.setDepDate(marketDatesJson.getString("departureTime"));
+							seg.setDepDate(s.toString());
 							seg.setDepairport(marketDatesJson.getString("origin"));
 							seg.setArrairport(marketDatesJson.getString("destination"));
 							seg.setDeptime(marketDatesJson.getString("departureTime"));
