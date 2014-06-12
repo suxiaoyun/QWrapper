@@ -29,7 +29,7 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 	@Override
 	public BookingResult getBookingInfo(FlightSearchParam arg0) {
 
-		String bookingUrlPre = "http://bookflights.monarch.co.uk/Passenger.aspx";
+		String bookingUrlPre = "http://bookflights.monarch.co.uk/Select.aspx";
 		BookingResult bookingResult = new BookingResult();
 		String depDate=arg0.getDepDate();
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
