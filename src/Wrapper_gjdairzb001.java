@@ -211,7 +211,6 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 							flightNoList.clear();
 							
 							seg.setFlightno(marketDatesJson.getString("flightNumber"));
-							seg.setDepDate(s.toString());
 							seg.setDepairport(marketDatesJson.getString("origin"));
 							seg.setArrairport(marketDatesJson.getString("destination"));
 							seg.setDeptime(marketDatesJson.getString("departureTime"));
@@ -220,14 +219,14 @@ public class Wrapper_gjdairzb001 implements QunarCrawler{
 							String marketDatesJsonDateString = marketDatesJson.getString("dateArrival");
 							String marketDatesJsonDateStringsub = marketDatesJsonDateString.substring(marketDatesJsonDateString.indexOf("(")+1,marketDatesJsonDateString.lastIndexOf(")"));
 							Date marketDatesJsonDate=new Date(Long.parseLong(marketDatesJsonDateStringsub));
-							SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-							String dateArrival = format.format(marketDatesJsonDate);
+							String dateArrival = formatter.format(marketDatesJsonDate);
+							String dateDeparture = formatter.format(marketDatesJsonDateDeparture);
 							seg.setArrDate(dateArrival);
-							
+							seg.setDepDate(dateDeparture);
 							flightNoList.add(marketDatesJson.getString("flightNumber"));
 							
 							
-							flightDetail.setDepdate(s);
+							flightDetail.setDepdate(formatter.parse(dateDeparture));
 							flightDetail.setFlightno(flightNoList);
 							flightDetail.setMonetaryunit("GBP");
 							
