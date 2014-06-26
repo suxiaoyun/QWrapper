@@ -176,13 +176,11 @@ public class Wrapper_gjsairzb001 implements QunarCrawler{
 		try {			
 			List<RoundTripFlightInfo > flightList = new ArrayList<RoundTripFlightInfo >();
 			JSONArray ajson = JSON.parseArray(jsonStr2);				
-			RoundTripFlightInfo  baseFlight = new RoundTripFlightInfo ();
 			List<FlightSegement> segs = new ArrayList<FlightSegement>();
-			FlightDetail flightDetail = new FlightDetail();
-			FlightSegement seg = new FlightSegement();
-			List<String> flightNoList =Lists.newArrayList();
-			double goTax=0;
-			double returnTax=0;
+			
+			List<FlightDetail> depFlightDetailList=new ArrayList<FlightDetail>();
+			List<FlightDetail> retFlightDetailList=new ArrayList<FlightDetail>();
+			
 			double sumTax=0;
 			double goPrice=0;
 			double returnPrice=0;
@@ -210,7 +208,8 @@ public class Wrapper_gjsairzb001 implements QunarCrawler{
 				String[] depDates = depDate.split("-");
 				depDate=depDates[depDates.length-1];
 				if(Integer.parseInt(dateStringTrims[0])==Integer.parseInt(depDate)){
-					flightNoList.clear();
+					FlightDetail flightDetail = new FlightDetail();
+					List<String> flightNoList =Lists.newArrayList();
 					String flightNo = marketDatesJson.getString("flightNumber").replaceAll("[^a-zA-Z\\d]", "");
 					flightNoList.add(flightNo);
 					
@@ -233,19 +232,22 @@ public class Wrapper_gjsairzb001 implements QunarCrawler{
 					JSONObject passengerTypesJson0=(JSONObject)passengerTypesJson.get(0);
 					
 					goPrice=passengerTypesJson0.getDouble("farePrice");
-					baseFlight.setOutboundPrice(goPrice);
 					
 					JSONArray taxesJson=(JSONArray)passengerTypesJson0.get("taxesJson");
+					double goTax=0;
 					for(int k=0;k<taxesJson.size();k++){
 						JSONObject taxesJsonk=(JSONObject)taxesJson.get(k);
 						Double tax = taxesJsonk.getDouble("price");
 						goTax+=tax;
 					}
+					
+					flightDetail.setTax(goTax);
+					flightDetail.setPrice(goPrice);
+					depFlightDetailList.add(flightDetail);
 				}
 			}
 			
 //·µ³Ì
-			List<String> retflightno = Lists.newArrayList(); 
 			JSONObject returnJson = ajson.getJSONObject(1);
 			Object returnMarketDatesJsonValue = returnJson.get("marketDatesJson");
 			JSONArray returnMarketDatesJsons=(JSONArray)returnMarketDatesJsonValue;
@@ -258,19 +260,13 @@ public class Wrapper_gjsairzb001 implements QunarCrawler{
 				String[] dateStringTrims = dateStrings[1].trim().split(" ");
 				String retDate = arg1.getRetDate();
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
-				Date s=null;  
-				try {  
-					s= formatter.parse(retDate); 
-				} catch (ParseException e) {  
-					// TODO Auto-generated catch block  
-					e.printStackTrace();  
-				}  
 				String[] depDates = retDate.split("-");
 				retDate=depDates[depDates.length-1];
 				if(Integer.parseInt(dateStringTrims[0])==Integer.parseInt(retDate)){
-					retflightno.clear();
+					FlightDetail flightDetail = new FlightDetail();
+					List<String> retflightno = Lists.newArrayList(); 
+					FlightSegement seg = new FlightSegement();
 					
-					baseFlight.setRetdepdate(s);
 					String flightNode = marketDatesJson.getString("flightNumber").replaceAll("[^a-zA-Z\\d]", "");
 					retflightno.add(flightNode);
 					
@@ -280,6 +276,11 @@ public class Wrapper_gjsairzb001 implements QunarCrawler{
 					seg.setDeptime(marketDatesJson.getString("departureTime"));
 					seg.setArrtime(marketDatesJson.getString("arrivalTime"));
 					
+					flightDetail.setFlightno(retflightno);
+					flightDetail.setDepcity(marketDatesJson.getString("origin"));
+					flightDetail.setArrcity(marketDatesJson.getString("destination"));
+					flightDetail.setWrapperid(arg1.getWrapperid());
+
 					String marketDatesJsonDateDepartureString = marketDatesJson.getString("dateDeparture");
 					String marketDatesJsonDateDepartureStringsub = marketDatesJsonDateDepartureString.substring(marketDatesJsonDateDepartureString.indexOf("(")+1,marketDatesJsonDateDepartureString.lastIndexOf(")"));
 					Date marketDatesJsonDateDeparture=new Date(Long.parseLong(marketDatesJsonDateDepartureStringsub));
@@ -293,39 +294,91 @@ public class Wrapper_gjsairzb001 implements QunarCrawler{
 					seg.setArrDate(dateArrival);
 					seg.setDepDate(dateDeparture);
 					
+					flightDetail.setDepdate(formatter.parse(dateDeparture));
+					flightDetail.setMonetaryunit("GBP");
+
 					segs.add(seg);
-					baseFlight.setInfo(segs);
 					
 					JSONArray airPacksJson=(JSONArray)marketDatesJson.get("airPacksJson");
 					JSONObject airPacksJson0=(JSONObject)airPacksJson.get(0);
 					JSONArray passengerTypesJson=(JSONArray)airPacksJson0.get("passengerTypesJson");
 					JSONObject passengerTypesJson0=(JSONObject)passengerTypesJson.get(0);
 					returnPrice=passengerTypesJson0.getDouble("farePrice");
-					baseFlight.setReturnedPrice(returnPrice);
 					
 					JSONArray taxesJson=(JSONArray)passengerTypesJson0.get("taxesJson");
+					double returnTax=0;
 					for(int k=0;k<taxesJson.size();k++){
 						JSONObject taxesJsonk=(JSONObject)taxesJson.get(k);
 						Double tax = taxesJsonk.getDouble("price");
 						returnTax+=tax;
 					}
+					
+					flightDetail.setTax(returnTax);
+					flightDetail.setPrice(returnPrice);
+					retFlightDetailList.add(flightDetail);
 				}
 			}
-			
-			sumTax=returnTax+goTax;
-			DecimalFormat df = new DecimalFormat("0.0000");
-			String t = df.format(sumTax);
-			sumTax=Double.parseDouble(t);
-			flightDetail.setTax(sumTax);
-			
-			sumPrice=goPrice+returnPrice;
-			String tt = df.format(sumPrice);
-			sumPrice=Double.parseDouble(tt);
-			flightDetail.setPrice(sumPrice);
-			
-			baseFlight.setDetail(flightDetail);
-			
-			flightList.add(baseFlight);
+
+//×ÜºÍ
+			for(FlightDetail depFlightDetail:depFlightDetailList){
+				
+				for(FlightDetail retFlightDetail:retFlightDetailList){
+					FlightDetail flightDetail=new FlightDetail();
+					
+					List<String> depFlightNos = depFlightDetail.getFlightno();
+					
+					
+					
+					List<FlightSegement> segList = new ArrayList<FlightSegement>();
+					RoundTripFlightInfo  baseFlight = new RoundTripFlightInfo ();
+					baseFlight.setOutboundPrice(depFlightDetail.getPrice());
+					
+					String retDate = arg1.getRetDate();
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+					Date s=null;  
+					try {  
+						s= formatter.parse(retDate); 
+					} catch (ParseException e) {  
+						// TODO Auto-generated catch block  
+						e.printStackTrace();  
+					}  					
+					baseFlight.setRetdepdate(s);
+					
+					for(FlightSegement segement:segs){
+						if(segement.getFlightno().equals(retFlightDetail.getFlightno().get(0))){
+							segList.add(segement);
+							baseFlight.setInfo(segList);
+						}
+					}
+					
+					baseFlight.setReturnedPrice(retFlightDetail.getPrice());
+					baseFlight.setRetflightno(retFlightDetail.getFlightno());
+					
+					sumTax=depFlightDetail.getTax()+retFlightDetail.getTax();
+					DecimalFormat df = new DecimalFormat("0.0000");
+					String t = df.format(sumTax);
+					sumTax=Double.parseDouble(t);
+					
+					sumPrice=depFlightDetail.getPrice()+retFlightDetail.getPrice();
+					String tt = df.format(sumPrice);
+					sumPrice=Double.parseDouble(tt);
+					
+					
+					
+					flightDetail.setFlightno(depFlightNos);
+					flightDetail.setDepcity(arg1.getDep());
+					flightDetail.setArrcity(arg1.getArr());
+					flightDetail.setWrapperid(arg1.getWrapperid());
+					flightDetail.setDepdate(depFlightDetail.getDepdate());
+					flightDetail.setMonetaryunit("GBP");
+					flightDetail.setTax(sumTax);
+					flightDetail.setPrice(sumPrice);	
+					
+					baseFlight.setDetail(flightDetail);
+					
+					flightList.add(baseFlight);
+				}
+			}
 			
 			result.setRet(true);
 			result.setStatus(Constants.SUCCESS);
